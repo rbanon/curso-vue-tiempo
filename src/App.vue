@@ -8,6 +8,9 @@
       return {
         query: '',
         weather: {},
+        weatherCity: '',
+        weatherTemp: '',
+        weatherDesc: '',
       };
     },
 
@@ -16,11 +19,20 @@
         const resp = await weatherApi.get(`?q=${this.query}&appid=${API_KEY}&lang=${API_LANG}`);
 
         this.weather = resp.data;
-
+        this.weatherCity = resp.data.name;
+        this.weatherTemp = `${resp.data.main.temp}ºC`;
+        const description = resp.data.weather[0].description;
+        this.weatherDesc = description.charAt(0).toUpperCase() + description.slice(1);
         console.log(resp.data);
         console.log(resp.data.name); // Nombre
         console.log(resp.data.main.temp); // Temperatura
         console.log(resp.data.weather[0].description); // Descripción
+      },
+      async resultBuilder() {
+        const resp = await weatherApi.get(`?q=${this.query}&appid=${API_KEY}&lang=${API_LANG}`);
+
+        this.weather = resp.data;
+        return;
       },
       dateBuilder() {
         let day = new Date();
@@ -48,12 +60,14 @@
 
       <div class="weather-wrap">
         <div class="location-box">
-          <div class="location">Valencia, ES</div>
+          <div class="location">{{ weatherCity }}</div>
           <div class="date">{{ dateBuilder() }}</div>
           <div class="temp">
-            <h1>10ªC</h1>
+            <h1>{{ weatherTemp }}</h1>
           </div>
-          <div class="weather"><h3>cielo despejado</h3></div>
+          <div class="weather">
+            <h3>{{ weatherDesc }}</h3>
+          </div>
         </div>
       </div>
     </main>
@@ -95,6 +109,8 @@
     background-size: cover;
 
     background-position: bottom;
+
+    padding: 2%;
   }
 
   .search-box {
