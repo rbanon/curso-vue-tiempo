@@ -1,5 +1,6 @@
 <script>
-  import { weatherApi, API_KEY, API_LANG } from './api/weather-api';
+  import { weatherApi } from './api/weather-api';
+  import { API_KEY, API_LANG } from './api/config';
 
   export default {
     name: 'app',
