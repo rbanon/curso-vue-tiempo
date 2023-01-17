@@ -11,6 +11,7 @@
         weatherCity: '',
         weatherTemp: '',
         weatherDesc: '',
+        isLoaded: false,
       };
     },
 
@@ -23,16 +24,19 @@
         this.weatherTemp = `${resp.data.main.temp}ºC`;
         const description = resp.data.weather[0].description;
         this.weatherDesc = description.charAt(0).toUpperCase() + description.slice(1);
+        this.isLoaded = true;
+
         console.log(resp.data);
         console.log(resp.data.name); // Nombre
         console.log(resp.data.main.temp); // Temperatura
         console.log(resp.data.weather[0].description); // Descripción
+
+        console.log(this.isLoaded);
       },
       async resultBuilder() {
         const resp = await weatherApi.get(`?q=${this.query}&appid=${API_KEY}&lang=${API_LANG}`);
 
-        this.weather = resp.data;
-        return;
+        return (this.weather = resp.data);
       },
       dateBuilder() {
         let day = new Date();
@@ -58,7 +62,7 @@
         />
       </div>
 
-      <div class="weather-wrap">
+      <div class="weather-wrap" v-if="isLoaded">
         <div class="location-box">
           <div class="location">{{ weatherCity }}</div>
           <div class="date">{{ dateBuilder() }}</div>
