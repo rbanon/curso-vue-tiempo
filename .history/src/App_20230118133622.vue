@@ -2,14 +2,12 @@
   import { weatherApi, API_KEY, API_LANG } from './api/weather-api';
   import LocationBoxComponent from './pages/home/components/LocationBoxComponent.vue';
   import SearchBoxComponent from './pages/home/components/SearchBoxComponent.vue';
-  import WeatherBoxComponent from './pages/home/components/WeatherBoxComponent.vue';
 
   export default {
     name: 'app',
     data() {
       return {
         weather: {},
-        temperature: 0,
       };
     },
     methods: {
@@ -17,23 +15,25 @@
         try {
           const resp = await weatherApi.get(`?q=${event?.data}&appid=${API_KEY}&lang=${API_LANG}`);
           this.weather = resp.data;
-          this.temperature = (this.weather.main.temp - 273.15).toFixed(2);
         } catch (error) {
           console.error(error);
         }
       },
     },
-    components: { SearchBoxComponent, LocationBoxComponent, WeatherBoxComponent },
+    components: { SearchBoxComponent, LocationBoxComponent },
   };
 </script>
 
 <template>
-  <div class="main-container" :class="weather?.main && temperature > 16 ? 'warm' : 'cold'">
+  <div class="main-container" :class="weather?.main && weather?.main?.temp > 16 ? 'warm' : 'cold'">
     <main>
-      <SearchBoxComponent @call-api="fetchWeather" />
+      <SearchBoxComponent @call-api="fetchWeather"></SearchBoxComponent>
       <div class="weather-wrap" v-if="weather?.main">
-        <LocationBoxComponent :weather="weather" />
-        <WeatherBoxComponent :weather="weather" />
+        <!-- <LocationBoxComponent :weather="weather"></LocationBoxComponent> -->
+        <div class="weather-box">
+          <div class="temp">{{ Math.round(weather.main.temp - 273.15) }}°c</div>
+          <div class="weather">{{ weather.weather[0].description }}</div>
+        </div>
       </div>
     </main>
   </div>
@@ -77,5 +77,26 @@
 
   .weather-box {
     text-align: center;
+  }
+
+  .weather-box .temp {
+    display: inline-block;
+    padding: 10px 25px;
+    color: #fff;
+    font-size: 102px;
+    font-weight: 900;
+    text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+    margin: 30px 0px;
+    box-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+  }
+
+  .weather-box .weather {
+    color: #fff;
+    font-size: 48px;
+    font-weight: 700;
+    font-style: italic;
+    text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
   }
 </style>
