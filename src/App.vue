@@ -1,5 +1,6 @@
 <script>
-  import { weatherApi, API_KEY, API_LANG } from './api/weather-api';
+  import { weatherApi } from './api/weather-api';
+  import { API_KEY, API_LANG } from './api/config';
   import LocationBoxComponent from './pages/home/components/LocationBoxComponent.vue';
   import SearchBoxComponent from './pages/home/components/SearchBoxComponent.vue';
   import WeatherBoxComponent from './pages/home/components/WeatherBoxComponent.vue';
